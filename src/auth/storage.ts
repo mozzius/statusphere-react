@@ -9,7 +9,11 @@ import type { Database } from '#/db'
 export class StateStore implements NodeSavedStateStore {
   constructor(private db: Database) {}
   async get(key: string): Promise<NodeSavedState | undefined> {
-    const result = await this.db.selectFrom('auth_state').selectAll().where('key', '=', key).executeTakeFirst()
+    const result = await this.db
+      .selectFrom('auth_state')
+      .selectAll()
+      .where('key', '=', key)
+      .executeTakeFirst()
     if (!result) return
     return JSON.parse(result.state) as NodeSavedState
   }
@@ -29,7 +33,11 @@ export class StateStore implements NodeSavedStateStore {
 export class SessionStore implements NodeSavedSessionStore {
   constructor(private db: Database) {}
   async get(key: string): Promise<NodeSavedSession | undefined> {
-    const result = await this.db.selectFrom('auth_session').selectAll().where('key', '=', key).executeTakeFirst()
+    const result = await this.db
+      .selectFrom('auth_session')
+      .selectAll()
+      .where('key', '=', key)
+      .executeTakeFirst()
     if (!result) return
     return JSON.parse(result.session) as NodeSavedSession
   }

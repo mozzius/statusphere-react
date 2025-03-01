@@ -8,7 +8,7 @@ import {
   AuthVerifier,
   StreamAuthVerifier,
 } from '@atproto/xrpc-server'
-import { schemas } from './lexicons'
+import { schemas } from './lexicons.js'
 
 export function createServer(options?: XrpcOptions): Server {
   return new Server(options)
@@ -104,13 +104,13 @@ export class ComAtprotoRepoNS {
 
 type SharedRateLimitOpts<T> = {
   name: string
-  calcKey?: (ctx: T) => string
+  calcKey?: (ctx: T) => string | null
   calcPoints?: (ctx: T) => number
 }
 type RouteRateLimitOpts<T> = {
   durationMs: number
   points: number
-  calcKey?: (ctx: T) => string
+  calcKey?: (ctx: T) => string | null
   calcPoints?: (ctx: T) => number
 }
 type HandlerOpts = { blobLimit?: number }

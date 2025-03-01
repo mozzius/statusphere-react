@@ -85,7 +85,7 @@ function content({ statuses, didHandleMap, profile, myStatus }: Props) {
               value="${status}"
             >
               ${status}
-            </button>`
+            </button>`,
         )}
       </form>
       ${statuses.map((status, i) => {

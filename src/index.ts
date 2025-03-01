@@ -10,7 +10,11 @@ import { env } from '#/lib/env'
 import { createIngester } from '#/ingester'
 import { createRouter } from '#/routes'
 import { createClient } from '#/auth/client'
-import { createBidirectionalResolver, createIdResolver, BidirectionalResolver } from '#/id-resolver'
+import {
+  createBidirectionalResolver,
+  createIdResolver,
+  BidirectionalResolver,
+} from '#/id-resolver'
 import type { Database } from '#/db'
 import { IdResolver, MemoryCache } from '@atproto/identity'
 
@@ -27,7 +31,7 @@ export class Server {
   constructor(
     public app: express.Application,
     public server: http.Server,
-    public ctx: AppContext
+    public ctx: AppContext,
   ) {}
 
   static async create() {
@@ -63,7 +67,9 @@ export class Server {
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
     app.use(router)
-    app.use((_req, res) => res.sendStatus(404))
+    app.use('*', (_req, res) => {
+      res.sendStatus(404)
+    })
 
     // Bind our server to the port
     const server = app.listen(env.PORT)

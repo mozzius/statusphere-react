@@ -3,7 +3,6 @@ import { IdResolver, MemoryCache } from '@atproto/identity'
 const HOUR = 60e3 * 60
 const DAY = HOUR * 24
 
-
 export function createIdResolver() {
   return new IdResolver({
     didCache: new MemoryCache(HOUR, DAY),
@@ -27,11 +26,11 @@ export function createBidirectionalResolver(resolver: IdResolver) {
     },
 
     async resolveDidsToHandles(
-      dids: string[]
+      dids: string[],
     ): Promise<Record<string, string>> {
       const didHandleMap: Record<string, string> = {}
       const resolves = await Promise.all(
-        dids.map((did) => this.resolveDidToHandle(did).catch((_) => did))
+        dids.map((did) => this.resolveDidToHandle(did).catch((_) => did)),
       )
       for (let i = 0; i < dids.length; i++) {
         didHandleMap[dids[i]] = resolves[i]

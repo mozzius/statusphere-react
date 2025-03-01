@@ -19,11 +19,11 @@ type Session = { did: string }
 
 // Helper function for defining routes
 const handler =
-  (fn: express.Handler) =>
+  (fn: (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void> | void) =>
   async (
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction
+    next: express.NextFunction,
   ) => {
     try {
       await fn(req, res, next)
@@ -36,7 +36,7 @@ const handler =
 async function getSessionAgent(
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>,
-  ctx: AppContext
+  ctx: AppContext,
 ) {
   const session = await getIronSession<Session>(req, res, {
     cookieName: 'sid',
@@ -63,8 +63,8 @@ export const createRouter = (ctx: AppContext) => {
   router.get(
     '/client-metadata.json',
     handler((_req, res) => {
-      return res.json(ctx.oauthClient.clientMetadata)
-    })
+      res.json(ctx.oauthClient.clientMetadata)
+    }),
   )
 
   // OAuth callback to complete session creation
@@ -81,20 +81,20 @@ export const createRouter = (ctx: AppContext) => {
         assert(!clientSession.did, 'session already exists')
         clientSession.did = session.did
         await clientSession.save()
+        res.redirect('/')
       } catch (err) {
         ctx.logger.error({ err }, 'oauth callback failed')
-        return res.redirect('/?error')
+        res.redirect('/?error')
       }
-      return res.redirect('/')
-    })
+    }),
   )
 
   // Login page
   router.get(
     '/login',
     handler(async (_req, res) => {
-      return res.type('html').send(page(login({})))
-    })
+      res.type('html').send(page(login({})))
+    }),
   )
 
   // Login handler
@@ -104,7 +104,8 @@ export const createRouter = (ctx: AppContext) => {
       // Validate
       const handle = req.body?.handle
       if (typeof handle !== 'string' || !isValidHandle(handle)) {
-        return res.type('html').send(page(login({ error: 'invalid handle' })))
+        res.type('html').send(page(login({ error: 'invalid handle' })))
+        return
       }
 
       // Initiate the OAuth flow
@@ -112,21 +113,21 @@ export const createRouter = (ctx: AppContext) => {
         const url = await ctx.oauthClient.authorize(handle, {
           scope: 'atproto transition:generic',
         })
-        return res.redirect(url.toString())
+        res.redirect(url.toString())
       } catch (err) {
         ctx.logger.error({ err }, 'oauth authorize failed')
-        return res.type('html').send(
+        res.type('html').send(
           page(
             login({
               error:
                 err instanceof OAuthResolverError
                   ? err.message
                   : "couldn't initiate login",
-            })
-          )
+            }),
+          ),
         )
       }
-    })
+    }),
   )
 
   // Logout handler
@@ -138,8 +139,8 @@ export const createRouter = (ctx: AppContext) => {
         password: env.COOKIE_SECRET,
       })
       await session.destroy()
-      return res.redirect('/')
-    })
+      res.redirect('/')
+    }),
   )
 
   // Homepage
@@ -167,41 +168,45 @@ export const createRouter = (ctx: AppContext) => {
 
       // Map user DIDs to their domain-name handles
       const didHandleMap = await ctx.resolver.resolveDidsToHandles(
-        statuses.map((s) => s.authorDid)
+        statuses.map((s) => s.authorDid),
       )
 
       if (!agent) {
         // Serve the logged-out view
-        return res.type('html').send(page(home({ statuses, didHandleMap })))
+        res.type('html').send(page(home({ statuses, didHandleMap })))
+        return
       }
 
       // Fetch additional information about the logged-in user
-      const profileResponse = await agent.com.atproto.repo.getRecord({
-        repo: agent.assertDid,
-        collection: 'app.bsky.actor.profile',
-        rkey: 'self',
-      }).catch(() => undefined);
+      const profileResponse = await agent.com.atproto.repo
+        .getRecord({
+          repo: agent.assertDid,
+          collection: 'app.bsky.actor.profile',
+          rkey: 'self',
+        })
+        .catch(() => undefined)
 
-      const profileRecord = profileResponse?.data;
+      const profileRecord = profileResponse?.data
 
-      const profile = profileRecord &&
+      const profile =
+        profileRecord &&
         Profile.isRecord(profileRecord.value) &&
         Profile.validateRecord(profileRecord.value).success
           ? profileRecord.value
           : {}
 
       // Serve the logged-in view
-      return res.type('html').send(
+      res.type('html').send(
         page(
           home({
             statuses,
             didHandleMap,
             profile,
             myStatus,
-          })
-        )
+          }),
+        ),
       )
-    })
+    }),
   )
 
   // "Set status" handler
@@ -211,10 +216,11 @@ export const createRouter = (ctx: AppContext) => {
       // If the user is signed in, get an agent which communicates with their server
       const agent = await getSessionAgent(req, res, ctx)
       if (!agent) {
-        return res
+        res
           .status(401)
           .type('html')
           .send('<h1>Error: Session required</h1>')
+        return
       }
 
       // Construct & validate their status record
@@ -225,29 +231,31 @@ export const createRouter = (ctx: AppContext) => {
         createdAt: new Date().toISOString(),
       }
       if (!Status.validateRecord(record).success) {
-        return res
+        res
           .status(400)
           .type('html')
           .send('<h1>Error: Invalid status</h1>')
+        return
       }
 
       let uri
       try {
         // Write the status record to the user's repository
-        const res = await agent.com.atproto.repo.putRecord({
+        const response = await agent.com.atproto.repo.putRecord({
           repo: agent.assertDid,
           collection: 'xyz.statusphere.status',
           rkey,
           record,
           validate: false,
         })
-        uri = res.data.uri
+        uri = response.data.uri
       } catch (err) {
         ctx.logger.warn({ err }, 'failed to write record')
-        return res
+        res
           .status(500)
           .type('html')
           .send('<h1>Error: Failed to write record</h1>')
+        return
       }
 
       try {
@@ -268,12 +276,12 @@ export const createRouter = (ctx: AppContext) => {
       } catch (err) {
         ctx.logger.warn(
           { err },
-          'failed to update computed view; ignoring as it should be caught by the firehose'
+          'failed to update computed view; ignoring as it should be caught by the firehose',
         )
       }
 
-      return res.redirect('/')
-    })
+      res.redirect('/')
+    }),
   )
 
   return router

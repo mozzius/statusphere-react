@@ -1,6 +1,6 @@
 import pino from 'pino'
 import { IdResolver } from '@atproto/identity'
-import { Firehose } from '@atproto/sync'
+import { Firehose, type Event } from '@atproto/sync'
 import type { Database } from '#/db'
 import * as Status from '#/lexicon/types/xyz/statusphere/status'
 
@@ -8,7 +8,7 @@ export function createIngester(db: Database, idResolver: IdResolver) {
   const logger = pino({ name: 'firehose ingestion' })
   return new Firehose({
     idResolver,
-    handleEvent: async (evt) => {
+    handleEvent: async (evt: Event) => {
       // Watch for write events
       if (evt.event === 'create' || evt.event === 'update') {
         const now = new Date()
@@ -17,24 +17,25 @@ export function createIngester(db: Database, idResolver: IdResolver) {
         // If the write is a valid status update
         if (
           evt.collection === 'xyz.statusphere.status' &&
-          Status.isRecord(record) &&
-          Status.validateRecord(record).success
+          Status.isRecord(record)
         ) {
+          const validatedRecord = Status.validateRecord(record)
+          if (!validatedRecord.success) return
           // Store the status in our SQLite
           await db
             .insertInto('status')
             .values({
               uri: evt.uri.toString(),
               authorDid: evt.did,
-              status: record.status,
-              createdAt: record.createdAt,
+              status: validatedRecord.value.status,
+              createdAt: validatedRecord.value.createdAt,
               indexedAt: now.toISOString(),
             })
             .onConflict((oc) =>
               oc.column('uri').doUpdateSet({
-                status: record.status,
+                status: validatedRecord.value.status,
                 indexedAt: now.toISOString(),
-              })
+              }),
             )
             .execute()
         }
@@ -43,10 +44,13 @@ export function createIngester(db: Database, idResolver: IdResolver) {
         evt.collection === 'xyz.statusphere.status'
       ) {
         // Remove the status from our SQLite
-        await db.deleteFrom('status').where('uri', '=', evt.uri.toString()).execute()
+        await db
+          .deleteFrom('status')
+          .where('uri', '=', evt.uri.toString())
+          .execute()
       }
     },
-    onError: (err) => {
+    onError: (err: Error) => {
       logger.error({ err }, 'error on firehose ingestion')
     },
     filterCollections: ['xyz.statusphere.status'],
