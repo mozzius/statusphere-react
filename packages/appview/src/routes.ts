@@ -9,7 +9,7 @@ import { getIronSession, SessionOptions } from 'iron-session'
 
 import type { AppContext } from '#/index'
 import { env } from '#/lib/env'
-import { statusToStatusView } from '#/lib/status'
+import { statusToStatusView } from '#/lib/hydrate'
 
 type Session = { did: string }
 
