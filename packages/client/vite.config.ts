@@ -1,7 +1,7 @@
-import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,6 +12,7 @@ export default defineConfig({
       },
     }),
     tailwindcss(),
+    tsconfigPaths(),
   ],
   server: {
     host: '127.0.0.1',
@@ -21,11 +22,6 @@ export default defineConfig({
         target: 'http://localhost:3001',
         changeOrigin: true,
       },
-    },
-  },
-  resolve: {
-    alias: {
-      '#': path.resolve(__dirname, './src'),
     },
   },
 })
