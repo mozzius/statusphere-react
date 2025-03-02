@@ -77,13 +77,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Add a small artificial delay for UX purposes
       const loginPromise = api.login(handle)
-      
+
       // Ensure the loading state shows for at least 800ms for better UX
       const result = await Promise.all([
         loginPromise,
-        new Promise(resolve => setTimeout(resolve, 800))
+        new Promise((resolve) => setTimeout(resolve, 800)),
       ]).then(([loginResult]) => loginResult)
-      
+
       return result
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Login failed'

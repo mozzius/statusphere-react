@@ -18,7 +18,9 @@ const StatusList = () => {
 
   if (isLoading && !data) {
     return (
-      <div className="py-4 text-center text-gray-500 dark:text-gray-400">Loading statuses...</div>
+      <div className="py-4 text-center text-gray-500 dark:text-gray-400">
+        Loading statuses...
+      </div>
     )
   }
 
@@ -32,7 +34,9 @@ const StatusList = () => {
 
   if (statuses.length === 0) {
     return (
-      <div className="py-4 text-center text-gray-500 dark:text-gray-400">No statuses yet.</div>
+      <div className="py-4 text-center text-gray-500 dark:text-gray-400">
+        No statuses yet.
+      </div>
     )
   }
 

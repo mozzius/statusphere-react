@@ -160,9 +160,11 @@ const StatusForm = () => {
                 transition-all duration-200
                 ${isSelected ? 'opacity-60' : 'opacity-100'}
                 ${!isSelected ? 'hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-110' : ''}
-                ${isCurrentStatus 
-                  ? 'bg-blue-50 ring-1 ring-blue-200 dark:bg-blue-900 dark:bg-opacity-30 dark:ring-blue-700' 
-                  : ''}
+                ${
+                  isCurrentStatus
+                    ? 'bg-blue-50 ring-1 ring-blue-200 dark:bg-blue-900 dark:bg-opacity-30 dark:ring-blue-700'
+                    : ''
+                }
                 active:scale-95
                 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500
               `}

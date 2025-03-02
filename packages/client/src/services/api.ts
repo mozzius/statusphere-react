@@ -1,6 +1,7 @@
 import { AppBskyActorDefs, XyzStatusphereDefs } from '@statusphere/lexicon'
 
-const API_URL = import.meta.env.VITE_API_URL || '/api'
+// Use '/api' prefix consistently for all API calls
+const API_URL = '/api'
 
 // Helper function for logging API actions
 function logApiCall(
@@ -24,13 +25,9 @@ export interface User {
 
 // API service
 export const api = {
-  // Get base URL
-  getBaseUrl() {
-    return API_URL || ''
-  },
   // Login
   async login(handle: string) {
-    const url = API_URL ? `${API_URL}/login` : '/login'
+    const url = `${API_URL}/login`
     logApiCall('POST', url)
 
     const response = await fetch(url, {
@@ -52,7 +49,7 @@ export const api = {
 
   // Logout
   async logout() {
-    const url = API_URL ? `${API_URL}/logout` : '/logout'
+    const url = `${API_URL}/logout`
     logApiCall('POST', url)
     const response = await fetch(url, {
       method: 'POST',
@@ -68,15 +65,12 @@ export const api = {
 
   // Get current user
   async getCurrentUser() {
-    const url = API_URL ? `${API_URL}/user` : '/user'
+    const url = `${API_URL}/user`
     logApiCall('GET', url)
     try {
-      console.log('📞 Fetching user from:', url, 'with credentials included')
-      // Debug output - what headers are we sending?
       const headers = {
         Accept: 'application/json',
       }
-      console.log('📨 Request headers:', headers)
 
       const response = await fetch(url, {
         credentials: 'include', // This is crucial for sending cookies
@@ -120,7 +114,7 @@ export const api = {
 
   // Get statuses
   async getStatuses() {
-    const url = API_URL ? `${API_URL}/statuses` : '/statuses'
+    const url = `${API_URL}/statuses`
     logApiCall('GET', url)
     const response = await fetch(url, {
       credentials: 'include',
@@ -137,7 +131,7 @@ export const api = {
 
   // Create status
   async createStatus(status: string) {
-    const url = API_URL ? `${API_URL}/status` : '/status'
+    const url = `${API_URL}/status`
     logApiCall('POST', url)
     const response = await fetch(url, {
       method: 'POST',

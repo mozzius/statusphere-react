@@ -11,17 +11,14 @@
     "dev:client": "pnpm --filter @statusphere/client dev",
     "dev:oauth": "node scripts/setup-ngrok.js",
     "lexgen": "pnpm --filter @statusphere/lexicon build",
-    
     "build": "pnpm build:lexicon && pnpm build:client && pnpm build:appview",
     "build:lexicon": "pnpm --filter @statusphere/lexicon build",
     "build:appview": "pnpm --filter @statusphere/appview build",
     "build:client": "pnpm --filter @statusphere/client build",
-    
     "start": "pnpm --filter @statusphere/appview start",
     "start:dev": "pnpm -r start",
     "start:appview": "pnpm --filter @statusphere/appview start",
     "start:client": "pnpm --filter @statusphere/client start",
-    
     "clean": "pnpm -r clean",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "typecheck": "pnpm -r typecheck"

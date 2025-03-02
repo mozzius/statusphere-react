@@ -63,11 +63,13 @@ pnpm format          # Format all code
 For production deployment:
 
 1. Build all packages in the correct order:
+
    ```bash
    pnpm build
    ```
-   
+
    This will:
+
    - Build the lexicon package first (shared type definitions)
    - Build the frontend (`packages/client`) next
    - Finally build the backend (`packages/appview`)
@@ -78,6 +80,7 @@ For production deployment:
    ```
 
 The backend server will:
+
 - Serve the API at `/api/*` endpoints
 - Serve the frontend static files from the client's build directory
 - Handle client-side routing by serving index.html for all non-API routes

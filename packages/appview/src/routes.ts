@@ -117,6 +117,15 @@ export const createRouter = (ctx: AppContext) => {
         clientSession.did = session.did
         await clientSession.save()
 
+        // Get the origin and determine appropriate redirect
+        const host = req.get('host') || ''
+        const protocol = req.protocol || 'http'
+        const baseUrl = `${protocol}://${host}`
+
+        ctx.logger.info(
+          `OAuth callback successful, redirecting to ${baseUrl}/oauth-callback`,
+        )
+
         // Redirect to the frontend oauth-callback page
         res.redirect('/oauth-callback')
       } catch (err) {

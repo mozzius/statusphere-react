@@ -13,7 +13,9 @@ const HomePage = () => {
           <h2 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
             Loading Statusphere...
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">Setting up your experience</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Setting up your experience
+          </p>
         </div>
       </div>
     )
@@ -23,7 +25,9 @@ const HomePage = () => {
     return (
       <div className="flex justify-center items-center py-16">
         <div className="text-center p-6 max-w-md">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Error</h2>
+          <h2 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+            Error
+          </h2>
           <p className="text-red-500 mb-4">{error}</p>
           <a
             href="/login"
