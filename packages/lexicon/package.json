@@ -12,7 +12,8 @@
     "dev": "tsup --watch",
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
-    "lexgen": "lex gen-api ./src ../../lexicons/xyz/statusphere/* ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/* --yes"
+    "lexgen": "lex gen-api ./src ../../lexicons/xyz/statusphere/* ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/* --yes",
+    "postinstall": "pnpm run build"
   },
   "dependencies": {
     "@atproto/api": "^0.14.7",

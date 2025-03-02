@@ -43,32 +43,34 @@ This all-in-one command makes OAuth development seamless.
 
 ```bash
 # Build commands
-pnpm build          # Build frontend first, then backend
-pnpm build:appview  # Build only the backend
-pnpm build:client   # Build only the frontend
+pnpm build           # Build in correct order: lexicon → client → appview
+pnpm build:lexicon   # Build only the lexicon package (type definitions)
+pnpm build:client    # Build only the frontend
+pnpm build:appview   # Build only the backend
 
 # Start commands
-pnpm start          # Start the server (serves API and frontend)
-pnpm start:client   # Start frontend development server only
-pnpm start:dev      # Start both backend and frontend separately (development only)
+pnpm start           # Start the server (serves API and frontend)
+pnpm start:client    # Start frontend development server only
+pnpm start:dev       # Start both backend and frontend separately (development only)
 
 # Other utilities
-pnpm typecheck      # Run type checking
-pnpm format         # Format all code
+pnpm typecheck       # Run type checking
+pnpm format          # Format all code
 ```
 
 ## Deployment
 
 For production deployment:
 
-1. Build both packages:
+1. Build all packages in the correct order:
    ```bash
    pnpm build
    ```
    
    This will:
-   - Build the frontend (`packages/client`) first
-   - Then build the backend (`packages/appview`)
+   - Build the lexicon package first (shared type definitions)
+   - Build the frontend (`packages/client`) next
+   - Finally build the backend (`packages/appview`)
 
 2. Start the server:
    ```bash

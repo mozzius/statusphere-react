@@ -12,7 +12,8 @@
     "dev:oauth": "node scripts/setup-ngrok.js",
     "lexgen": "pnpm --filter @statusphere/lexicon build",
     
-    "build": "pnpm build:client && pnpm build:appview",
+    "build": "pnpm build:lexicon && pnpm build:client && pnpm build:appview",
+    "build:lexicon": "pnpm --filter @statusphere/lexicon build",
     "build:appview": "pnpm --filter @statusphere/appview build",
     "build:client": "pnpm --filter @statusphere/client build",
     
