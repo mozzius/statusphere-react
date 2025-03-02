@@ -139,6 +139,11 @@ export class Server {
       // Serve static files
       app.use(express.static(frontendPath))
 
+      // Heathcheck
+      app.get('/health', (req, res) => {
+        res.status(200).json({ status: 'ok' })
+      })
+
       // For any other requests, send the index.html file
       app.get('*', (req, res) => {
         // Only handle non-API paths
