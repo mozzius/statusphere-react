@@ -127,7 +127,10 @@ export class Server {
     app.use('/api', router)
 
     // Serve static files from the frontend build
-    const frontendPath = path.resolve(__dirname, '../../../client/dist')
+    const frontendPath = path.resolve(
+      __dirname,
+      '../../../packages/client/dist',
+    )
 
     // Check if the frontend build exists
     if (fs.existsSync(frontendPath)) {
