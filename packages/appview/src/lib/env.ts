@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { cleanEnv, host, port, str, testOnly, url } from 'envalid'
+import { cleanEnv, host, port, str, testOnly } from 'envalid'
 
 dotenv.config()
 
@@ -8,12 +8,11 @@ export const env = cleanEnv(process.env, {
     devDefault: testOnly('test'),
     choices: ['development', 'production', 'test'],
   }),
-  HOST: host({ devDefault: testOnly('localhost') }),
-  PORT: port({ devDefault: testOnly(3001) }),
+  HOST: host({ devDefault: '127.0.0.1' }),
+  PORT: port({ devDefault: 3001 }),
+  VITE_PORT: port({ devDefault: 3000 }),
   DB_PATH: str({ devDefault: ':memory:' }),
-  COOKIE_SECRET: str({ devDefault: '00000000000000000000000000000000' }),
-  ATPROTO_SERVER: str({ default: 'https://bsky.social' }),
+  COOKIE_SECRET: str({ devDefault: '0'.repeat(32) }),
   SERVICE_DID: str({ default: undefined }),
-  PUBLIC_URL: str({ default: 'http://localhost:3001' }),
-  NGROK_URL: str({ default: '' }),
+  PUBLIC_URL: str({ devDefault: '' }),
 })

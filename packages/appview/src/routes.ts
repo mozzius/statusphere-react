@@ -238,7 +238,7 @@ export const createRouter = (ctx: AppContext) => {
           .selectFrom('status')
           .selectAll()
           .orderBy('indexedAt', 'desc')
-          .limit(10)
+          .limit(30)
           .execute()
 
         res.json({

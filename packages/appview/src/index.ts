@@ -79,22 +79,8 @@ export class Server {
               'http://127.0.0.1:3000', // Alternative React address
             ]
 
-            // If we have an ngrok URL defined, add it to allowed origins
-            if (env.NGROK_URL) {
-              try {
-                const ngrokOrigin = new URL(env.NGROK_URL)
-                const ngrokClientOrigin = `${ngrokOrigin.protocol}//${ngrokOrigin.hostname}:3000`
-                allowedOrigins.push(ngrokClientOrigin)
-              } catch (err) {
-                console.error('Failed to parse NGROK_URL for CORS:', err)
-              }
-            }
-
             // Check if the request origin is in our allowed list or is an ngrok domain
-            if (
-              allowedOrigins.indexOf(origin) !== -1 ||
-              origin.includes('ngrok-free.app')
-            ) {
+            if (allowedOrigins.indexOf(origin) !== -1) {
               callback(null, true)
             } else {
               console.warn(`⚠️ CORS blocked origin: ${origin}`)
@@ -122,42 +108,42 @@ export class Server {
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
 
-    // Two versions of the API routes:
-    // 1. Mounted at /api for the client
     app.use('/api', router)
 
-    // Serve static files from the frontend build
-    const frontendPath = path.resolve(
-      __dirname,
-      '../../../packages/client/dist',
-    )
+    // Serve static files from the frontend build - prod only
+    if (env.isProduction) {
+      const frontendPath = path.resolve(
+        __dirname,
+        '../../../packages/client/dist',
+      )
 
-    // Check if the frontend build exists
-    if (fs.existsSync(frontendPath)) {
-      logger.info(`Serving frontend static files from: ${frontendPath}`)
+      // Check if the frontend build exists
+      if (fs.existsSync(frontendPath)) {
+        logger.info(`Serving frontend static files from: ${frontendPath}`)
 
-      // Serve static files
-      app.use(express.static(frontendPath))
+        // Serve static files
+        app.use(express.static(frontendPath))
 
-      // Heathcheck
-      app.get('/health', (req, res) => {
-        res.status(200).json({ status: 'ok' })
-      })
+        // Heathcheck
+        app.get('/health', (req, res) => {
+          res.status(200).json({ status: 'ok' })
+        })
 
-      // For any other requests, send the index.html file
-      app.get('*', (req, res) => {
-        // Only handle non-API paths
-        if (!req.path.startsWith('/api/')) {
-          res.sendFile(path.join(frontendPath, 'index.html'))
-        } else {
-          res.status(404).json({ error: 'API endpoint not found' })
-        }
-      })
-    } else {
-      logger.warn(`Frontend build not found at: ${frontendPath}`)
-      app.use('*', (_req, res) => {
-        res.sendStatus(404)
-      })
+        // For any other requests, send the index.html file
+        app.get('*', (req, res) => {
+          // Only handle non-API paths
+          if (!req.path.startsWith('/api/')) {
+            res.sendFile(path.join(frontendPath, 'index.html'))
+          } else {
+            res.status(404).json({ error: 'API endpoint not found' })
+          }
+        })
+      } else {
+        logger.warn(`Frontend build not found at: ${frontendPath}`)
+        app.use('*', (_req, res) => {
+          res.sendStatus(404)
+        })
+      }
     }
 
     // Use the port from env (should be 3001 for the API server)

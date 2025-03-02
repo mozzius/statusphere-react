@@ -8,12 +8,12 @@
   "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
-    "build": "pnpm run lexgen && tsup",
+    "build": "pnpm lexgen && tsup",
     "dev": "tsup --watch",
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
-    "lexgen": "lex gen-api ./src ../../lexicons/xyz/statusphere/* ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/* --yes",
-    "postinstall": "pnpm run build"
+    "lexgen": "lex gen-api ./src ../../lexicons/xyz/statusphere/* ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/* --yes && pnpm format",
+    "format": "prettier --write src"
   },
   "dependencies": {
     "@atproto/api": "^0.14.7",

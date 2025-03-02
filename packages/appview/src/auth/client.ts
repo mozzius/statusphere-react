@@ -5,29 +5,22 @@ import { env } from '#/lib/env'
 import { SessionStore, StateStore } from './storage'
 
 export const createClient = async (db: Database) => {
-  // Get the ngrok URL from environment variables
-  const ngrokUrl = env.NGROK_URL
-
-  if (!ngrokUrl && env.NODE_ENV === 'development') {
-    console.warn(
-      'WARNING: NGROK_URL is not set. OAuth login might not work properly.',
-    )
-    console.warn(
-      'You should run ngrok and set the NGROK_URL environment variable.',
-    )
-    console.warn('Example: NGROK_URL=https://abcd-123-45-678-90.ngrok.io')
-  } else if (env.NODE_ENV === 'production' && !env.PUBLIC_URL) {
+  if (env.isProduction && !env.PUBLIC_URL) {
     throw new Error('PUBLIC_URL is not set')
   }
 
-  const baseUrl = ngrokUrl || env.PUBLIC_URL || `http://127.0.0.1:${env.PORT}`
+  const publicUrl = env.PUBLIC_URL
+  const url = publicUrl || `http://127.0.0.1:${env.VITE_PORT}`
+  const enc = encodeURIComponent
 
   return new NodeOAuthClient({
     clientMetadata: {
       client_name: 'Statusphere React App',
-      client_id: `${baseUrl}/api/client-metadata.json`,
-      client_uri: baseUrl,
-      redirect_uris: [`${baseUrl}/api/oauth/callback`],
+      client_id: publicUrl
+        ? `${url}/api/client-metadata.json`
+        : `http://localhost?redirect_uri=${enc(`${url}/api/oauth/callback`)}&scope=${enc('atproto transition:generic')}`,
+      client_uri: url,
+      redirect_uris: [`${url}/api/oauth/callback`],
       scope: 'atproto transition:generic',
       grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],

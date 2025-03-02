@@ -4,7 +4,7 @@ import api from '#/services/api'
 
 const StatusList = () => {
   // Use React Query to fetch and cache statuses
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ['statuses'],
     queryFn: async () => {
       const data = await api.getStatuses()
@@ -17,7 +17,7 @@ const StatusList = () => {
   // Destructure data
   const statuses = data?.statuses || []
 
-  if (isLoading && !data) {
+  if (isPending && !data) {
     return (
       <div className="py-4 text-center text-gray-500 dark:text-gray-400">
         Loading statuses...

@@ -20,24 +20,8 @@ This is a React implementation of the [example application](https://atproto.com/
 # Install dependencies
 pnpm install
 
-# Option 1: Local development (login won't work due to OAuth requirements)
 pnpm dev
-
-# Option 2: Development with OAuth login support (recommended)
-pnpm dev:oauth
 ```
-
-### OAuth Development
-
-Due to OAuth requirements, HTTPS is needed for development. We've made this easy:
-
-- `pnpm dev:oauth` - Sets up everything automatically:
-  1. Starts ngrok to create an HTTPS tunnel
-  2. Configures environment variables with the ngrok URL
-  3. Starts both the API server and client app
-  4. Handles proper shutdown of all processes
-
-This all-in-one command makes OAuth development seamless.
 
 ### Additional Commands
 
@@ -89,25 +73,17 @@ This simplifies deployment to a single process that handles both the API and ser
 
 ## Environment Variables
 
-Create a `.env` file in the root directory with:
+Copy the `.env.template` file in the appview to `.env`:
 
 ```
-# Required for AT Protocol authentication
-ATP_SERVICE_DID=did:plc:your-service-did
-ATP_CLIENT_ID=your-client-id
-ATP_CLIENT_SECRET=your-client-secret
-ATP_REDIRECT_URI=https://your-domain.com/oauth-callback
-
-# Optional
-PORT=3001
-SESSION_SECRET=your-session-secret
+cd packages/appview
+cp .env.template .env
 ```
 
 ## Requirements
 
 - Node.js 18+
 - pnpm 9+
-- ngrok (for OAuth development)
 
 ## License
 
