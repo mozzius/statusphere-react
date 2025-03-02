@@ -33,6 +33,7 @@ const STATUS_OPTIONS = [
   '🧌',
   '🦋',
   '🚀',
+  '😴',
 ]
 
 const StatusForm = () => {
