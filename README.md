@@ -1,8 +1,8 @@
 # Statusphere React
 
-A monorepo for the Statusphere application, which includes a React client and a Node.js backend.
+A status sharing application built with React and the AT Protocol.
 
-This is a React refactoring of the [example application](https://atproto.com/guides/applications) covering:
+This is a React implementation of the [example application](https://atproto.com/guides/applications) covering:
 
 - Signin via OAuth
 - Fetch information about users (profiles)
@@ -42,14 +42,60 @@ This all-in-one command makes OAuth development seamless.
 ### Additional Commands
 
 ```bash
-# Build both packages
-pnpm build
+# Build commands
+pnpm build          # Build frontend first, then backend
+pnpm build:appview  # Build only the backend
+pnpm build:client   # Build only the frontend
 
-# Run typecheck on both packages
-pnpm typecheck
+# Start commands
+pnpm start          # Start the server (serves API and frontend)
+pnpm start:client   # Start frontend development server only
+pnpm start:dev      # Start both backend and frontend separately (development only)
 
-# Format all code
-pnpm format
+# Other utilities
+pnpm typecheck      # Run type checking
+pnpm format         # Format all code
+```
+
+## Deployment
+
+For production deployment:
+
+1. Build both packages:
+   ```bash
+   pnpm build
+   ```
+   
+   This will:
+   - Build the frontend (`packages/client`) first
+   - Then build the backend (`packages/appview`)
+
+2. Start the server:
+   ```bash
+   pnpm start
+   ```
+
+The backend server will:
+- Serve the API at `/api/*` endpoints
+- Serve the frontend static files from the client's build directory
+- Handle client-side routing by serving index.html for all non-API routes
+
+This simplifies deployment to a single process that handles both the API and serves the frontend assets.
+
+## Environment Variables
+
+Create a `.env` file in the root directory with:
+
+```
+# Required for AT Protocol authentication
+ATP_SERVICE_DID=did:plc:your-service-did
+ATP_CLIENT_ID=your-client-id
+ATP_CLIENT_SECRET=your-client-secret
+ATP_REDIRECT_URI=https://your-domain.com/oauth-callback
+
+# Optional
+PORT=3001
+SESSION_SECRET=your-session-secret
 ```
 
 ## Requirements

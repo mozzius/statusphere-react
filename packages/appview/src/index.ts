@@ -1,5 +1,6 @@
 import events from 'node:events'
 import type http from 'node:http'
+import path from 'node:path'
 import type { OAuthClient } from '@atproto/oauth-client-node'
 import { Firehose } from '@atproto/sync'
 import cors from 'cors'
@@ -17,6 +18,7 @@ import {
 import { createIngester } from '#/ingester'
 import { env } from '#/lib/env'
 import { createRouter } from '#/routes'
+import fs from 'node:fs'
 
 // Application state passed to the router and elsewhere
 export type AppContext = {
@@ -119,10 +121,35 @@ export class Server {
     const router = createRouter(ctx)
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
-    app.use(router)
-    app.use('*', (_req, res) => {
-      res.sendStatus(404)
-    })
+    
+    // API routes
+    app.use('/api', router)
+    
+    // Serve static files from the frontend build
+    const frontendPath = path.resolve(__dirname, '../../../client/dist')
+    
+    // Check if the frontend build exists
+    if (fs.existsSync(frontendPath)) {
+      logger.info(`Serving frontend static files from: ${frontendPath}`)
+      
+      // Serve static files
+      app.use(express.static(frontendPath))
+      
+      // For any other requests, send the index.html file
+      app.get('*', (req, res) => {
+        // Skip API routes
+        if (req.path.startsWith('/api/')) {
+          return res.sendStatus(404)
+        }
+        
+        res.sendFile(path.join(frontendPath, 'index.html'))
+      })
+    } else {
+      logger.warn(`Frontend build not found at: ${frontendPath}`)
+      app.use('*', (_req, res) => {
+        res.sendStatus(404)
+      })
+    }
 
     // Use the port from env (should be 3001 for the API server)
     const server = app.listen(env.PORT)
