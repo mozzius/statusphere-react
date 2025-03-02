@@ -1,3 +1,25 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+dist
+build
+dist-ssr
+.turbo
+
+# Testing
+coverage
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+
 # Logs
 logs
 *.log
@@ -7,15 +29,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-coverage
-node_modules
-dist
-build
-dist-ssr
-*.local
-.env
-
 # Editor directories and files
+.vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -24,3 +39,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Database
+*.sqlite
+*.sqlite-journal

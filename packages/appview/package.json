@@ -1,0 +1,58 @@
+{
+  "name": "@statusphere/appview",
+  "version": "0.0.1",
+  "description": "Statusphere AppView backend",
+  "author": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "clean": "rimraf dist coverage",
+    "format": "prettier --write src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.14.7",
+    "@atproto/common": "^0.4.8",
+    "@atproto/identity": "^0.4.6",
+    "@atproto/lexicon": "^0.4.7",
+    "@atproto/oauth-client-node": "^0.2.11",
+    "@atproto/sync": "^0.1.15",
+    "@atproto/syntax": "^0.3.3",
+    "@atproto/xrpc-server": "^0.7.11",
+    "@statusphere/lexicon": "workspace:*",
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "envalid": "^8.0.0",
+    "express": "^4.21.2",
+    "iron-session": "^8.0.4",
+    "kysely": "^0.27.5",
+    "multiformats": "^13.3.2",
+    "pino": "^9.6.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.8",
+    "pino-pretty": "^13.0.0",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "tsup": {
+    "entry": [
+      "src",
+      "!src/**/__tests__/**",
+      "!src/**/*.test.*"
+    ],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
+  }
+}

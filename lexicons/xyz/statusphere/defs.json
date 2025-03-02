@@ -1,0 +1,29 @@
+{
+  "lexicon": 1,
+  "id": "xyz.statusphere.defs",
+  "defs": {
+    "statusView": {
+      "type": "object",
+      "required": ["uri", "status", "profile", "createdAt"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" },
+        "status": {
+          "type": "string",
+          "minLength": 1,
+          "maxGraphemes": 1,
+          "maxLength": 32
+        },
+        "createdAt": { "type": "string", "format": "datetime" },
+        "profile": { "type": "ref", "ref": "#profileView" }
+      }
+    },
+    "profileView": {
+      "type": "object",
+      "required": ["did", "handle"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": { "type": "string", "format": "handle" }
+      }
+    }
+  }
+}

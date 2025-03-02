@@ -1,60 +1,30 @@
 {
-  "name": "atproto-example-app",
+  "name": "statusphere-react",
   "version": "0.0.1",
-  "description": "",
+  "description": "Statusphere React monorepo",
   "author": "",
   "license": "MIT",
-  "main": "index.ts",
   "private": true,
   "scripts": {
-    "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
-    "build": "tsup",
-    "start": "node dist/index.js",
-    "lexgen": "lex gen-server ./src/lexicon ./lexicons/*",
-    "clean": "rimraf dist coverage",
-    "format": "prettier --write src",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@atproto/api": "^0.14.7",
-    "@atproto/common": "^0.4.1",
-    "@atproto/identity": "^0.4.0",
-    "@atproto/lexicon": "^0.4.2",
-    "@atproto/oauth-client-node": "^0.2.2",
-    "@atproto/sync": "^0.1.4",
-    "@atproto/syntax": "^0.3.0",
-    "@atproto/xrpc-server": "^0.7.9",
-    "better-sqlite3": "^11.1.2",
-    "dotenv": "^16.4.5",
-    "envalid": "^8.0.0",
-    "express": "^4.19.2",
-    "iron-session": "^8.0.2",
-    "kysely": "^0.27.4",
-    "multiformats": "^13.3.2",
-    "pino": "^9.3.2",
-    "uhtml": "^4.5.9"
+    "dev": "concurrently \"pnpm --filter @statusphere/appview dev\" \"pnpm --filter @statusphere/client dev\"",
+    "dev:appview": "pnpm --filter @statusphere/appview dev",
+    "dev:client": "pnpm --filter @statusphere/client dev",
+    "dev:oauth": "node scripts/setup-ngrok.js",
+    "lexgen": "pnpm --filter @statusphere/lexicon build",
+    "build": "pnpm -r build",
+    "start": "pnpm -r start",
+    "clean": "pnpm -r clean",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
     "@atproto/lex-cli": "^0.6.1",
-    "@types/better-sqlite3": "^7.6.11",
-    "@types/express": "^5.0.0",
-    "pino-pretty": "^13.0.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
+    "concurrently": "^9.1.2",
     "prettier": "^3.5.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "rimraf": "^6.0.1",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.0.2",
-    "tsx": "^4.7.2",
-    "typescript": "^5.4.4"
-  },
-  "tsup": {
-    "entry": [
-      "src",
-      "!src/**/__tests__/**",
-      "!src/**/*.test.*"
-    ],
-    "splitting": false,
-    "sourcemap": true,
-    "clean": true
+    "typescript": "^5.8.2"
   },
   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

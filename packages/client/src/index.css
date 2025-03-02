@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  75% { opacity: 1; } /* Hold full opacity for most of the animation */
+  100% { opacity: 0; }
+}
+
+.status-message-fade {
+  animation: fadeOut 2s forwards;
+}

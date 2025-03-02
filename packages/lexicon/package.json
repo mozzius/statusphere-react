@@ -1,0 +1,43 @@
+{
+  "name": "@statusphere/lexicon",
+  "version": "0.0.1",
+  "description": "Generated API client for Statusphere lexicons",
+  "author": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "pnpm run lexgen && tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "lexgen": "lex gen-api ./src ../../lexicons/xyz/statusphere/* ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/* --yes"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.14.7",
+    "@atproto/lexicon": "^0.4.7",
+    "@atproto/syntax": "^0.3.3",
+    "@atproto/xrpc": "^0.6.9",
+    "multiformats": "^13.3.2"
+  },
+  "devDependencies": {
+    "@atproto/lex-cli": "^0.6.1",
+    "@types/node": "^22.13.8",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "cjs",
+      "esm"
+    ],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true
+  }
+}
