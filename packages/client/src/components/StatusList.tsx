@@ -81,9 +81,14 @@ const StatusList = () => {
               </div>
               <div className="flex-1">
                 <div className="text-gray-600 dark:text-gray-300 text-base">
-                  <span className="font-medium text-gray-700 dark:text-gray-200 hover:underline">
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://bsky.app/profile/${handle}`}
+                    className="font-medium text-gray-700 dark:text-gray-200 hover:underline"
+                  >
                     @{handle}
-                  </span>{' '}
+                  </a>{' '}
                   {isToday ? (
                     <span>
                       is feeling{' '}
