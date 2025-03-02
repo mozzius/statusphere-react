@@ -132,10 +132,10 @@ const StatusForm = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-6 shadow-sm">
       <h2 className="text-xl font-semibold mb-4">How are you feeling?</h2>
       {(error || mutation.error) && (
-        <div className="text-red-500 mb-4 p-2 bg-red-50 rounded-md">
+        <div className="text-red-500 mb-4 p-2 bg-red-50 dark:bg-red-950 dark:bg-opacity-30 rounded-md">
           {error ||
             (mutation.error instanceof Error
               ? mutation.error.message
@@ -159,10 +159,12 @@ const StatusForm = () => {
                 flex items-center justify-center
                 transition-all duration-200
                 ${isSelected ? 'opacity-60' : 'opacity-100'}
-                ${!isSelected ? 'hover:bg-gray-100 hover:scale-110' : ''}
-                ${isCurrentStatus ? 'bg-blue-50 ring-1 ring-blue-200' : ''}
+                ${!isSelected ? 'hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-110' : ''}
+                ${isCurrentStatus 
+                  ? 'bg-blue-50 ring-1 ring-blue-200 dark:bg-blue-900 dark:bg-opacity-30 dark:ring-blue-700' 
+                  : ''}
                 active:scale-95
-                focus:outline-none focus:ring-2 focus:ring-blue-300
+                focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500
               `}
               title={isCurrentStatus ? 'Your current status' : undefined}
             >

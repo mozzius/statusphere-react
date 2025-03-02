@@ -66,7 +66,7 @@ const OAuthCallbackPage = () => {
 
   return (
     <div className="flex items-center justify-center py-16">
-      <div className="bg-white rounded-lg shadow-sm p-8 max-w-md w-full text-center">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 max-w-md w-full text-center">
         {error ? (
           <div>
             <h2 className="text-2xl font-bold text-red-500 mb-4">
@@ -75,20 +75,20 @@ const OAuthCallbackPage = () => {
             <p className="text-red-500 mb-6">{error}</p>
             <button
               onClick={() => navigate('/login')}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
             >
               Try Again
             </button>
           </div>
         ) : (
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
               Authentication in Progress
             </h2>
             <div className="flex justify-center mb-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 dark:border-blue-400"></div>
             </div>
-            <p className="text-gray-600">{message}</p>
+            <p className="text-gray-600 dark:text-gray-400">{message}</p>
           </div>
         )}
       </div>

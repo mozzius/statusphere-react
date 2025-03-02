@@ -18,7 +18,7 @@ const StatusList = () => {
 
   if (isLoading && !data) {
     return (
-      <div className="py-4 text-center text-gray-500">Loading statuses...</div>
+      <div className="py-4 text-center text-gray-500 dark:text-gray-400">Loading statuses...</div>
     )
   }
 
@@ -32,7 +32,7 @@ const StatusList = () => {
 
   if (statuses.length === 0) {
     return (
-      <div className="py-4 text-center text-gray-500">No statuses yet.</div>
+      <div className="py-4 text-center text-gray-500 dark:text-gray-400">No statuses yet.</div>
     )
   }
 
@@ -59,7 +59,7 @@ const StatusList = () => {
   return (
     <div className="px-4">
       <div className="relative">
-        <div className="absolute left-[20.5px] top-[22.5px] bottom-[22.5px] w-0.5 bg-gray-200"></div>
+        <div className="absolute left-[20.5px] top-[22.5px] bottom-[22.5px] w-0.5 bg-gray-200 dark:bg-gray-700"></div>
         {statuses.map((status) => {
           const handle =
             status.profile.handle || status.profile.did.substring(0, 15) + '...'
@@ -71,12 +71,12 @@ const StatusList = () => {
               key={status.uri}
               className="relative flex items-center gap-5 py-4"
             >
-              <div className="relative z-10 rounded-full bg-white border border-gray-200 h-[45px] w-[45px] flex items-center justify-center shadow-sm">
+              <div className="relative z-10 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 h-[45px] w-[45px] flex items-center justify-center shadow-sm">
                 <div className="text-2xl">{status.status}</div>
               </div>
               <div className="flex-1">
-                <div className="text-gray-600 text-base">
-                  <span className="font-medium text-gray-700 hover:underline">
+                <div className="text-gray-600 dark:text-gray-300 text-base">
+                  <span className="font-medium text-gray-700 dark:text-gray-200 hover:underline">
                     @{handle}
                   </span>{' '}
                   {isToday ? (

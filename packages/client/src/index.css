@@ -9,3 +9,10 @@
 .status-message-fade {
   animation: fadeOut 2s forwards;
 }
+
+/* Base styling */
+@layer base {
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+}

@@ -10,10 +10,10 @@ const HomePage = () => {
     return (
       <div className="flex justify-center items-center py-16">
         <div className="text-center p-6">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-800">
+          <h2 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
             Loading Statusphere...
           </h2>
-          <p className="text-gray-600">Setting up your experience</p>
+          <p className="text-gray-600 dark:text-gray-400">Setting up your experience</p>
         </div>
       </div>
     )
@@ -23,11 +23,11 @@ const HomePage = () => {
     return (
       <div className="flex justify-center items-center py-16">
         <div className="text-center p-6 max-w-md">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-800">Error</h2>
+          <h2 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Error</h2>
           <p className="text-red-500 mb-4">{error}</p>
           <a
             href="/login"
-            className="inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            className="inline-block px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
           >
             Try logging in again
           </a>
@@ -43,7 +43,7 @@ const HomePage = () => {
       {user && <StatusForm />}
 
       <div>
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+        <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
           Recent Statuses
         </h2>
         <StatusList />
