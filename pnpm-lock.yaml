@@ -99,6 +99,9 @@ importers:
       '@types/node':
         specifier: ^22.13.8
         version: 22.13.8
+      '@types/ws':
+        specifier: ^8.5.14
+        version: 8.5.14
       pino-pretty:
         specifier: ^13.0.0
         version: 13.0.0
@@ -1005,6 +1008,9 @@ packages:
 
   '@types/serve-static@1.15.7':
     resolution: {integrity: sha512-W8Ym+h8nhuRwaKPaDw34QUkwsGi6Rc4yYqvKFo5rm2FUEhCFbzVWrxXUxuKK8TASjWsysJY0nsmNCGhCOIsrOw==}
+
+  '@types/ws@8.5.14':
+    resolution: {integrity: sha512-bd/YFLW+URhBzMXurx7lWByOu+xzU9+kb3RboOteXYDfW+tr+JZa99OyNmPINEGB/ahzKrEuc8rcv4gnpJmxTw==}
 
   '@typescript-eslint/eslint-plugin@8.25.0':
     resolution: {integrity: sha512-VM7bpzAe7JO/BFf40pIT1lJqS/z1F8OaSsUB3rpFJucQA4cOSuH2RVVVkFULN+En0Djgr29/jb4EQnedUo95KA==}
@@ -3621,6 +3627,10 @@ snapshots:
       '@types/http-errors': 2.0.4
       '@types/node': 22.13.8
       '@types/send': 0.17.4
+
+  '@types/ws@8.5.14':
+    dependencies:
+      '@types/node': 22.13.8
 
   '@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)':
     dependencies:
