@@ -11,6 +11,7 @@ const StatusList = () => {
       return data
     },
     placeholderData: (previousData) => previousData, // Use previous data while refetching
+    refetchInterval: 30e3, // Refetch every 30 seconds
   })
 
   // Destructure data
