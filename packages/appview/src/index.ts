@@ -2,32 +2,21 @@ import events from 'node:events'
 import fs from 'node:fs'
 import type http from 'node:http'
 import path from 'node:path'
-import type { OAuthClient } from '@atproto/oauth-client-node'
-import { Firehose } from '@atproto/sync'
+import { DAY, SECOND } from '@atproto/common'
+import compression from 'compression'
 import cors from 'cors'
-import express, { type Express } from 'express'
+import express from 'express'
 import { pino } from 'pino'
 
+import API, { health, oauth } from '#/api'
 import { createClient } from '#/auth/client'
+import { AppContext } from '#/context'
 import { createDb, migrateToLatest } from '#/db'
-import type { Database } from '#/db'
-import {
-  BidirectionalResolver,
-  createBidirectionalResolver,
-  createIdResolver,
-} from '#/id-resolver'
+import * as error from '#/error'
+import { createBidirectionalResolver, createIdResolver } from '#/id-resolver'
 import { createIngester } from '#/ingester'
+import { createServer } from '#/lexicons'
 import { env } from '#/lib/env'
-import { createRouter } from '#/routes'
-
-// Application state passed to the router and elsewhere
-export type AppContext = {
-  db: Database
-  ingester: Firehose
-  logger: pino.Logger
-  oauthClient: OAuthClient
-  resolver: BidirectionalResolver
-}
 
 export class Server {
   constructor(
@@ -60,55 +49,29 @@ export class Server {
     // Subscribe to events on the firehose
     ingester.start()
 
-    // Create our server
-    const app: Express = express()
-    app.set('trust proxy', true)
-
-    // CORS configuration based on environment
-    if (env.NODE_ENV === 'development') {
-      // In development, allow multiple origins including ngrok
-      app.use(
-        cors({
-          origin: function (origin, callback) {
-            // Allow requests with no origin (like mobile apps, curl)
-            if (!origin) return callback(null, true)
-
-            // List of allowed origins
-            const allowedOrigins = [
-              'http://localhost:3000', // Standard React port
-              'http://127.0.0.1:3000', // Alternative React address
-            ]
-
-            // Check if the request origin is in our allowed list or is an ngrok domain
-            if (allowedOrigins.indexOf(origin) !== -1) {
-              callback(null, true)
-            } else {
-              console.warn(`⚠️ CORS blocked origin: ${origin}`)
-              callback(null, false)
-            }
-          },
-          credentials: true,
-          methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-          allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-        }),
-      )
-    } else {
-      // In production, CORS is not needed if frontend and API are on same domain
-      // But we'll still enable it for flexibility with minimal configuration
-      app.use(
-        cors({
-          origin: true, // Use req.origin, which means same-origin requests will always be allowed
-          credentials: true,
-        }),
-      )
-    }
-
-    // Routes & middlewares
-    const router = createRouter(ctx)
+    const app = express()
+    app.use(cors({ maxAge: DAY / SECOND }))
+    app.use(compression())
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
 
-    app.use('/api', router)
+    // Create our server
+    let server = createServer({
+      validateResponse: env.isDevelopment,
+      payload: {
+        jsonLimit: 100 * 1024, // 100kb
+        textLimit: 100 * 1024, // 100kb
+        // no blobs
+        blobLimit: 0,
+      },
+    })
+
+    server = API(server, ctx)
+
+    app.use(health.createRouter(ctx))
+    app.use(oauth.createRouter(ctx))
+    app.use(server.xrpc.router)
+    app.use(error.createHandler(ctx))
 
     // Serve static files from the frontend build - prod only
     if (env.isProduction) {
@@ -124,15 +87,10 @@ export class Server {
         // Serve static files
         app.use(express.static(frontendPath))
 
-        // Heathcheck
-        app.get('/health', (req, res) => {
-          res.status(200).json({ status: 'ok' })
-        })
-
         // For any other requests, send the index.html file
         app.get('*', (req, res) => {
           // Only handle non-API paths
-          if (!req.path.startsWith('/api/')) {
+          if (!req.path.startsWith('/xrpc/')) {
             res.sendFile(path.join(frontendPath, 'index.html'))
           } else {
             res.status(404).json({ error: 'API endpoint not found' })
@@ -144,16 +102,18 @@ export class Server {
           res.sendStatus(404)
         })
       }
+    } else {
+      server.xrpc.router.set('trust proxy', true)
     }
 
     // Use the port from env (should be 3001 for the API server)
-    const server = app.listen(env.PORT)
-    await events.once(server, 'listening')
+    const httpServer = app.listen(env.PORT)
+    await events.once(httpServer, 'listening')
     logger.info(
       `API Server (${NODE_ENV}) running on port http://${HOST}:${env.PORT}`,
     )
 
-    return new Server(app, server, ctx)
+    return new Server(app, httpServer, ctx)
   }
 
   async close() {

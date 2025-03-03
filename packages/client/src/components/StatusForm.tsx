@@ -46,7 +46,7 @@ const StatusForm = () => {
 
   // Use React Query mutation for creating a status
   const mutation = useMutation({
-    mutationFn: (emoji: string) => api.createStatus(emoji),
+    mutationFn: (emoji: string) => api.createStatus({ status: emoji }),
     onMutate: async (emoji) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic updates
       await queryClient.cancelQueries({ queryKey: ['statuses'] })
@@ -65,7 +65,7 @@ const StatusForm = () => {
         const optimisticStatus = {
           uri: `optimistic-${Date.now()}`,
           profile: {
-            did: user.did,
+            did: user.profile.did,
             handle: user.profile.handle,
           },
           status: emoji,

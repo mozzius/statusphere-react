@@ -10,6 +10,7 @@
     "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "build": "tsup",
     "start": "node dist/index.js",
+    "lexgen": "lex gen-server ./src/lexicons ../../lexicons/xyz/statusphere/* ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/* --yes && pnpm format",
     "clean": "rimraf dist coverage",
     "format": "prettier --write src",
     "typecheck": "tsc --noEmit"
@@ -25,6 +26,7 @@
     "@atproto/xrpc-server": "^0.7.11",
     "@statusphere/lexicon": "workspace:*",
     "better-sqlite3": "^11.8.1",
+    "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
@@ -35,7 +37,9 @@
     "pino": "^9.6.0"
   },
   "devDependencies": {
+    "@atproto/lex-cli": "^0.6.1",
     "@types/better-sqlite3": "^7.6.12",
+    "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.8",

@@ -10,7 +10,7 @@
     "dev:lexicon": "pnpm --filter @statusphere/lexicon dev",
     "dev:appview": "pnpm --filter @statusphere/appview dev",
     "dev:client": "pnpm --filter @statusphere/client dev",
-    "lexgen": "pnpm --filter @statusphere/lexicon lexgen",
+    "lexgen": "pnpm -r lexgen",
     "build": "pnpm build:lexicon && pnpm build:client && pnpm build:appview",
     "build:lexicon": "pnpm --filter @statusphere/lexicon build",
     "build:appview": "pnpm --filter @statusphere/appview build",

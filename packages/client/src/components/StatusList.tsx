@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import api from '#/services/api'
@@ -7,12 +8,18 @@ const StatusList = () => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ['statuses'],
     queryFn: async () => {
-      const data = await api.getStatuses()
+      const { data } = await api.getStatuses({ limit: 30 })
       return data
     },
     placeholderData: (previousData) => previousData, // Use previous data while refetching
     refetchInterval: 30e3, // Refetch every 30 seconds
   })
+
+  useEffect(() => {
+    if (error) {
+      console.error(error)
+    }
+  }, [error])
 
   // Destructure data
   const statuses = data?.statuses || []

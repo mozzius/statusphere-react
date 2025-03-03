@@ -37,7 +37,7 @@ const OAuthCallbackPage = () => {
               .join(', '),
           )
 
-          const user = await api.getCurrentUser()
+          const user = await api.getCurrentUser({})
           console.log('Current user check result:', user)
 
           if (user) {

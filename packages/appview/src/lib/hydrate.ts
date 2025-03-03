@@ -4,8 +4,8 @@ import {
   XyzStatusphereDefs,
 } from '@statusphere/lexicon'
 
+import { AppContext } from '#/context'
 import { Status } from '#/db'
-import { AppContext } from '#/index'
 
 export async function statusToStatusView(
   status: Status,

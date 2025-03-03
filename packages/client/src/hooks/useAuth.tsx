@@ -1,10 +1,12 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { XRPCError } from '@atproto/xrpc'
+import { XyzStatusphereGetUser } from '@statusphere/lexicon'
 
-import api, { User } from '#/services/api'
+import api from '#/services/api'
 
 interface AuthContextType {
-  user: User | null
+  user: XyzStatusphereGetUser.OutputSchema | null
   loading: boolean
   error: string | null
   login: (handle: string) => Promise<{ redirectUrl: string }>
@@ -39,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const userData = await api.getCurrentUser()
+        const { data: userData } = await api.getCurrentUser({})
 
         // Clean up URL if needed
         if (window.location.search && userData) {
@@ -52,6 +54,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         return userData
       } catch (apiErr) {
+        if (
+          apiErr instanceof XRPCError &&
+          apiErr.error === 'AuthenticationRequired'
+        ) {
+          return null
+        }
+
         console.error('🚫 API error during auth check:', apiErr)
 
         // If it's a network error, provide a more helpful message
@@ -75,16 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null)
 
     try {
-      // Add a small artificial delay for UX purposes
-      const loginPromise = api.login(handle)
-
-      // Ensure the loading state shows for at least 800ms for better UX
-      const result = await Promise.all([
-        loginPromise,
-        new Promise((resolve) => setTimeout(resolve, 800)),
-      ]).then(([loginResult]) => loginResult)
-
-      return result
+      return await api.login(handle)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Login failed'
       setError(message)

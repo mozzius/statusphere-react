@@ -18,7 +18,7 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 3000,
     proxy: {
-      '/api': {
+      '^/(xrpc|oauth|client-metadata\.json)/.*': {
         target: 'http://localhost:3001',
         changeOrigin: true,
       },

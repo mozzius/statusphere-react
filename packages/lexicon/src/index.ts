@@ -21,10 +21,16 @@ import * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord.js'
 import * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef.js'
 import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob.js'
 import * as XyzStatusphereDefs from './types/xyz/statusphere/defs.js'
+import * as XyzStatusphereGetStatuses from './types/xyz/statusphere/getStatuses.js'
+import * as XyzStatusphereGetUser from './types/xyz/statusphere/getUser.js'
+import * as XyzStatusphereSendStatus from './types/xyz/statusphere/sendStatus.js'
 import * as XyzStatusphereStatus from './types/xyz/statusphere/status.js'
 import { OmitKey, Un$Typed } from './util.js'
 
 export * as XyzStatusphereDefs from './types/xyz/statusphere/defs.js'
+export * as XyzStatusphereGetStatuses from './types/xyz/statusphere/getStatuses.js'
+export * as XyzStatusphereGetUser from './types/xyz/statusphere/getUser.js'
+export * as XyzStatusphereSendStatus from './types/xyz/statusphere/sendStatus.js'
 export * as XyzStatusphereStatus from './types/xyz/statusphere/status.js'
 export * as ComAtprotoLabelDefs from './types/com/atproto/label/defs.js'
 export * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites.js'
@@ -77,6 +83,32 @@ export class XyzStatusphereNS {
   constructor(client: XrpcClient) {
     this._client = client
     this.status = new StatusRecord(client)
+  }
+
+  getStatuses(
+    params?: XyzStatusphereGetStatuses.QueryParams,
+    opts?: XyzStatusphereGetStatuses.CallOptions,
+  ): Promise<XyzStatusphereGetStatuses.Response> {
+    return this._client.call(
+      'xyz.statusphere.getStatuses',
+      params,
+      undefined,
+      opts,
+    )
+  }
+
+  getUser(
+    params?: XyzStatusphereGetUser.QueryParams,
+    opts?: XyzStatusphereGetUser.CallOptions,
+  ): Promise<XyzStatusphereGetUser.Response> {
+    return this._client.call('xyz.statusphere.getUser', params, undefined, opts)
+  }
+
+  sendStatus(
+    data?: XyzStatusphereSendStatus.InputSchema,
+    opts?: XyzStatusphereSendStatus.CallOptions,
+  ): Promise<XyzStatusphereSendStatus.Response> {
+    return this._client.call('xyz.statusphere.sendStatus', opts?.qp, data, opts)
   }
 }
 

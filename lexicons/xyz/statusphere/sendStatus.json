@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "xyz.statusphere.sendStatus",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Send a status into the ATmosphere.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "minLength": 1,
+              "maxGraphemes": 1,
+              "maxLength": 32
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": {
+              "type": "ref",
+              "ref": "xyz.statusphere.defs#statusView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

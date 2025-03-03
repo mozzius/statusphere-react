@@ -68,7 +68,7 @@ For production deployment:
 
 The backend server will:
 
-- Serve the API at `/api/*` endpoints
+- Serve the API at `/xrpc/*` and `/oauth/*` endpoints
 - Serve the frontend static files from the client's build directory
 - Handle client-side routing by serving index.html for all non-API routes
 
