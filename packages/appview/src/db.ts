@@ -13,6 +13,7 @@ export type DatabaseSchema = {
   status: Status
   auth_session: AuthSession
   auth_state: AuthState
+  cursor: Cursor
 }
 
 export type Status = {
@@ -33,6 +34,11 @@ export type AuthState = {
   state: AuthStateJson
 }
 
+export type Cursor = {
+  id: number
+  seq: number
+}
+
 type AuthStateJson = string
 
 type AuthSessionJson = string
@@ -44,6 +50,19 @@ const migrations: Record<string, Migration> = {}
 const migrationProvider: MigrationProvider = {
   async getMigrations() {
     return migrations
+  },
+}
+
+migrations['002'] = {
+  async up(db: Kysely<unknown>) {
+    await db.schema
+      .createTable('cursor')
+      .addColumn('id', 'integer', (col) => col.primaryKey())
+      .addColumn('seq', 'integer', (col) => col.notNull())
+      .execute()
+  },
+  async down(db: Kysely<unknown>) {
+    await db.schema.dropTable('cursor').execute()
   },
 }
 

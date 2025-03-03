@@ -1,14 +1,43 @@
 import { IdResolver } from '@atproto/identity'
-import { Firehose, type Event } from '@atproto/sync'
+import { Firehose, MemoryRunner, type Event } from '@atproto/sync'
 import { XyzStatusphereStatus } from '@statusphere/lexicon'
 import pino from 'pino'
 
 import type { Database } from '#/db'
 
-export function createIngester(db: Database, idResolver: IdResolver) {
+export async function createIngester(db: Database, idResolver: IdResolver) {
   const logger = pino({ name: 'firehose ingestion' })
+
+  const cursor = await db
+    .selectFrom('cursor')
+    .where('id', '=', 1)
+    .select('seq')
+    .executeTakeFirst()
+
+  logger.info(`start cursor: ${cursor?.seq}`)
+
+  // For throttling cursor writes
+  let lastCursorWrite = 0
+
+  const runner = new MemoryRunner({
+    startCursor: cursor?.seq || undefined,
+    setCursor: async (seq) => {
+      const now = Date.now()
+
+      if (now - lastCursorWrite >= 10000) {
+        lastCursorWrite = now
+        await db
+          .updateTable('cursor')
+          .set({ seq })
+          .where('id', '=', 1)
+          .execute()
+      }
+    },
+  })
+
   return new Firehose({
     idResolver,
+    runner,
     handleEvent: async (evt: Event) => {
       // Watch for write events
       if (evt.event === 'create' || evt.event === 'update') {
