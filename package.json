@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "pnpm lexgen && concurrently \"pnpm dev:appview\" \"pnpm dev:client\"",
+    "dev": "concurrently \"pnpm dev:appview\" \"pnpm dev:client\"",
     "dev:lexicon": "pnpm --filter @statusphere/lexicon dev",
     "dev:appview": "pnpm --filter @statusphere/appview dev",
     "dev:client": "pnpm --filter @statusphere/client dev",

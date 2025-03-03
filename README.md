@@ -20,6 +20,9 @@ This is a React implementation of the [example application](https://atproto.com/
 # Install dependencies
 pnpm install
 
+# Run this once, to run codegen from the lexicons
+pnpm build:lexicon
+
 pnpm dev
 ```
 
