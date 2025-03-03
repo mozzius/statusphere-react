@@ -3,7 +3,11 @@ import { Agent } from '@atproto/api'
 import { TID } from '@atproto/common'
 import { OAuthResolverError } from '@atproto/oauth-client-node'
 import { isValidHandle } from '@atproto/syntax'
-import { AppBskyActorProfile, XyzStatusphereStatus } from '@statusphere/lexicon'
+import {
+  AppBskyActorDefs,
+  AppBskyActorProfile,
+  XyzStatusphereStatus,
+} from '@statusphere/lexicon'
 import express from 'express'
 import { getIronSession, SessionOptions } from 'iron-session'
 
@@ -198,15 +202,36 @@ export const createRouter = (ctx: AppContext) => {
           .catch(() => undefined)
 
         const profileRecord = profileResponse?.data
-        const profile =
-          profileRecord &&
-          AppBskyActorProfile.isRecord(profileRecord.value) &&
-          AppBskyActorProfile.validateRecord(profileRecord.value).success
-            ? profileRecord.value
-            : ({} as AppBskyActorProfile.Record)
+        let profile: AppBskyActorProfile.Record =
+          {} as AppBskyActorProfile.Record
 
-        profile.did = did
-        profile.handle = await ctx.resolver.resolveDidToHandle(did)
+        if (
+          profileRecord &&
+          AppBskyActorProfile.isRecord(profileRecord.value)
+        ) {
+          const validated = AppBskyActorProfile.validateRecord(
+            profileRecord.value,
+          )
+          if (validated.success) {
+            profile = profileRecord.value
+          } else {
+            ctx.logger.error(
+              { err: validated.error },
+              'Failed to validate user profile',
+            )
+          }
+        }
+
+        const profileView: AppBskyActorDefs.ProfileView = {
+          $type: 'app.bsky.actor.defs#profileView',
+          did: did,
+          handle: await ctx.resolver.resolveDidToHandle(did),
+          avatar: profile.avatar
+            ? `https://atproto.pictures/img/${did}/${profile.avatar.ref}`
+            : undefined,
+          displayName: profile.displayName,
+          createdAt: profile.createdAt,
+        }
 
         // Fetch user status
         const status = await ctx.db
@@ -218,7 +243,7 @@ export const createRouter = (ctx: AppContext) => {
 
         res.json({
           did: agent.assertDid,
-          profile,
+          profile: profileView,
           status: status ? await statusToStatusView(status, ctx) : undefined,
         })
       } catch (err) {

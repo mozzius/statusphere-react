@@ -27,10 +27,17 @@ const Header = () => {
         <nav>
           {user ? (
             <div className="flex gap-4 items-center">
+              {user.profile.avatar ? (
+                <img
+                  src={user.profile.avatar}
+                  alt={user.profile.displayName || user.profile.handle}
+                  className="w-8 h-8 rounded-full"
+                />
+              ) : (
+                <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+              )}
               <span className="text-gray-700 dark:text-gray-300">
-                {user.profile?.displayName ||
-                  user.profile?.handle ||
-                  user.did.substring(0, 15)}
+                {user.profile.displayName || user.profile.handle}
               </span>
               <button
                 onClick={handleLogout}
