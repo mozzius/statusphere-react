@@ -13,7 +13,7 @@ import { getIronSession, SessionOptions } from 'iron-session'
 
 import type { AppContext } from '#/index'
 import { env } from '#/lib/env'
-import { statusToStatusView } from '#/lib/hydrate'
+import { bskyProfileToProfileView, statusToStatusView } from '#/lib/hydrate'
 
 type Session = { did: string }
 
@@ -222,17 +222,6 @@ export const createRouter = (ctx: AppContext) => {
           }
         }
 
-        const profileView: AppBskyActorDefs.ProfileView = {
-          $type: 'app.bsky.actor.defs#profileView',
-          did: did,
-          handle: await ctx.resolver.resolveDidToHandle(did),
-          avatar: profile.avatar
-            ? `https://atproto.pictures/img/${did}/${profile.avatar.ref}`
-            : undefined,
-          displayName: profile.displayName,
-          createdAt: profile.createdAt,
-        }
-
         // Fetch user status
         const status = await ctx.db
           .selectFrom('status')
@@ -243,7 +232,7 @@ export const createRouter = (ctx: AppContext) => {
 
         res.json({
           did: agent.assertDid,
-          profile: profileView,
+          profile: await bskyProfileToProfileView(did, profile, ctx),
           status: status ? await statusToStatusView(status, ctx) : undefined,
         })
       } catch (err) {

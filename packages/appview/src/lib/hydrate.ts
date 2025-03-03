@@ -1,4 +1,8 @@
-import { XyzStatusphereDefs } from '@statusphere/lexicon'
+import {
+  AppBskyActorDefs,
+  AppBskyActorProfile,
+  XyzStatusphereDefs,
+} from '@statusphere/lexicon'
 
 import { Status } from '#/db'
 import { AppContext } from '#/index'
@@ -17,5 +21,22 @@ export async function statusToStatusView(
         .resolveDidToHandle(status.authorDid)
         .catch(() => 'invalid.handle'),
     },
+  }
+}
+
+export async function bskyProfileToProfileView(
+  did: string,
+  profile: AppBskyActorProfile.Record,
+  ctx: AppContext,
+): Promise<AppBskyActorDefs.ProfileView> {
+  return {
+    $type: 'app.bsky.actor.defs#profileView',
+    did: did,
+    handle: await ctx.resolver.resolveDidToHandle(did),
+    avatar: profile.avatar
+      ? `https://atproto.pictures/img/${did}/${profile.avatar.ref}`
+      : undefined,
+    displayName: profile.displayName,
+    createdAt: profile.createdAt,
   }
 }
