@@ -20,7 +20,7 @@ const sessionOptions: SessionOptions = {
   cookieOptions: {
     secure: env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: true,
     path: '/',
     // Don't set domain explicitly - let browser determine it
     domain: undefined,
