@@ -71,9 +71,6 @@ export const schemaDict = {
               maximum: 100,
               default: 50,
             },
-            cursor: {
-              type: 'string',
-            },
           },
         },
         output: {

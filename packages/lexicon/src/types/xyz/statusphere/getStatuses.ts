@@ -15,7 +15,6 @@ const id = 'xyz.statusphere.getStatuses'
 
 export interface QueryParams {
   limit?: number
-  cursor?: string
 }
 
 export type InputSchema = undefined
