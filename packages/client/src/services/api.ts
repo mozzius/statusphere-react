@@ -10,11 +10,11 @@ class StatusphereAgent extends Lexicon.AtpBaseClient {
     super(StatusphereAgent.fetchHandler)
   }
 
-  private static fetchHandler: Lexicon.AtpBaseClient['fetchHandler'] = async (
+  private static fetchHandler: Lexicon.AtpBaseClient['fetchHandler'] = (
     path,
     options,
   ) => {
-    return await fetch(path, {
+    return fetch(path, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -62,17 +62,17 @@ export const api = {
   },
 
   // Get current user
-  async getCurrentUser(params: XyzStatusphereGetUser.QueryParams) {
+  getCurrentUser(params: XyzStatusphereGetUser.QueryParams) {
     return agent.xyz.statusphere.getUser(params)
   },
 
   // Get statuses
-  async getStatuses(params: XyzStatusphereGetStatuses.QueryParams) {
+  getStatuses(params: XyzStatusphereGetStatuses.QueryParams) {
     return agent.xyz.statusphere.getStatuses(params)
   },
 
   // Create status
-  async createStatus(params: XyzStatusphereSendStatus.InputSchema) {
+  createStatus(params: XyzStatusphereSendStatus.InputSchema) {
     return agent.xyz.statusphere.sendStatus(params)
   },
 }
