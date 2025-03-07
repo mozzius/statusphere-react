@@ -135,7 +135,7 @@ const run = async () => {
   const onCloseSignal = async () => {
     setTimeout(() => process.exit(1), 10000).unref() // Force shutdown after 10s
     await server.close()
-    process.exit()
+    process.exit(0)
   }
 
   process.on('SIGINT', onCloseSignal)
