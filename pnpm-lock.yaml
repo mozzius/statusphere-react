@@ -89,6 +89,9 @@ importers:
       pino:
         specifier: ^9.6.0
         version: 9.6.0
+      ws:
+        specifier: ^8.18.1
+        version: 8.18.1
     devDependencies:
       '@atproto/lex-cli':
         specifier: ^0.6.1

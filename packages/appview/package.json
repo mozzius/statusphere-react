@@ -34,7 +34,8 @@
     "iron-session": "^8.0.4",
     "kysely": "^0.27.5",
     "multiformats": "^13.3.2",
-    "pino": "^9.6.0"
+    "pino": "^9.6.0",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@atproto/lex-cli": "^0.6.1",
