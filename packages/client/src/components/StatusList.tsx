@@ -24,9 +24,10 @@ const StatusList = () => {
 
   // Destructure data
   const statuses = data?.statuses || []
-  
+
   // Get a random emoji from the STATUS_OPTIONS array
-  const randomEmoji = STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)]
+  const randomEmoji =
+    STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)]
 
   if (isPending && !data) {
     return (
