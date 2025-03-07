@@ -120,7 +120,7 @@ export class Server {
   async close() {
     this.ctx.logger.info('sigint received, shutting down')
     await this.ctx.ingester.destroy()
-    return new Promise<void>((resolve) => {
+    await new Promise<void>((resolve) => {
       this.server.close(() => {
         this.ctx.logger.info('server closed')
         resolve()
@@ -135,6 +135,7 @@ const run = async () => {
   const onCloseSignal = async () => {
     setTimeout(() => process.exit(1), 10000).unref() // Force shutdown after 10s
     await server.close()
+    process.exit(0)
   }
 
   process.on('SIGINT', onCloseSignal)

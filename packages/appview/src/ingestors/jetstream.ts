@@ -93,6 +93,7 @@ export class Jetstream<T> {
   private cursor?: number
   private ws?: WebSocket
   private isStarted = false
+  private isDestroyed = false
   private wantedCollections: string[]
 
   constructor({
@@ -133,6 +134,7 @@ export class Jetstream<T> {
   start() {
     if (this.isStarted) return
     this.isStarted = true
+    this.isDestroyed = false
     this.ws = new WebSocket(this.constructUrlWithQuery())
 
     this.ws.on('open', () => {
@@ -159,13 +161,16 @@ export class Jetstream<T> {
     })
 
     this.ws.on('close', (code, reason) => {
-      this.logger.error(`Jetstream closed. Code: ${code}, Reason: ${reason}`)
+      if (!this.isDestroyed) {
+        this.logger.error(`Jetstream closed. Code: ${code}, Reason: ${reason}`)
+      }
       this.isStarted = false
     })
   }
 
   destroy() {
     if (this.ws) {
+      this.isDestroyed = true
       this.ws.close()
       this.isStarted = false
     }
