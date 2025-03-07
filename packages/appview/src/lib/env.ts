@@ -15,4 +15,5 @@ export const env = cleanEnv(process.env, {
   COOKIE_SECRET: str({ devDefault: '0'.repeat(32) }),
   SERVICE_DID: str({ default: undefined }),
   PUBLIC_URL: str({ devDefault: '' }),
+  JETSTREAM_INSTANCE: str({ default: 'wss://jetstream.mozzius.dev' }),
 })

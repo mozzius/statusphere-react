@@ -3,6 +3,7 @@ import pino from 'pino'
 import WebSocket from 'ws'
 
 import type { Database } from '#/db'
+import { env } from '#/lib/env'
 
 export async function createJetstreamIngester(db: Database) {
   const logger = pino({ name: 'jetstream ingestion' })
@@ -19,6 +20,7 @@ export async function createJetstreamIngester(db: Database) {
   let lastCursorWrite = 0
 
   return new Jetstream<XyzStatusphereStatus.Record>({
+    instanceUrl: env.JETSTREAM_INSTANCE,
     logger,
     cursor: cursor?.seq || undefined,
     setCursor: async (seq) => {
@@ -55,7 +57,6 @@ export async function createJetstreamIngester(db: Database) {
         )
         if (!validatedRecord.success) return
 
-        // Store the status in our SQLite
         await db
           .insertInto('status')
           .values({
@@ -73,7 +74,6 @@ export async function createJetstreamIngester(db: Database) {
           )
           .execute()
       } else if (evt.commit.operation === 'delete') {
-        // Remove the status from our SQLite
         await db.deleteFrom('status').where('uri', '=', uri).execute()
       }
     },
@@ -85,6 +85,7 @@ export async function createJetstreamIngester(db: Database) {
 }
 
 export class Jetstream<T> {
+  private instanceUrl: string
   private logger: pino.Logger
   private handleEvent: (evt: JetstreamEvent<T>) => Promise<void>
   private onError: (err: unknown) => void
@@ -95,6 +96,7 @@ export class Jetstream<T> {
   private wantedCollections: string[]
 
   constructor({
+    instanceUrl,
     logger,
     cursor,
     setCursor,
@@ -102,6 +104,7 @@ export class Jetstream<T> {
     onError,
     wantedCollections,
   }: {
+    instanceUrl: string
     logger: pino.Logger
     cursor?: number
     setCursor?: (seq: number) => Promise<void>
@@ -109,6 +112,7 @@ export class Jetstream<T> {
     onError: (err: any) => void
     wantedCollections: string[]
   }) {
+    this.instanceUrl = instanceUrl
     this.logger = logger
     this.cursor = cursor
     this.setCursor = setCursor
@@ -123,7 +127,7 @@ export class Jetstream<T> {
     if (this.cursor !== undefined) {
       params.append('cursor', this.cursor.toString())
     }
-    return `wss://jetstream.mozzius.dev/subscribe?${params.toString()}`
+    return `${this.instanceUrl}/subscribe?${params.toString()}`
   }
 
   start() {
