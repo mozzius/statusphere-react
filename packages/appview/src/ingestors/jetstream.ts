@@ -173,6 +173,7 @@ export class Jetstream<T> {
       this.isDestroyed = true
       this.ws.close()
       this.isStarted = false
+      this.logger.info('jetstream destroyed gracefully')
     }
   }
 }
