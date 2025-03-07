@@ -53,12 +53,27 @@ const migrationProvider: MigrationProvider = {
   },
 }
 
+migrations['003'] = {
+  async up(db: Kysely<unknown>) {},
+  async down(_db: Kysely<unknown>) {},
+}
+
 migrations['002'] = {
   async up(db: Kysely<unknown>) {
     await db.schema
       .createTable('cursor')
       .addColumn('id', 'integer', (col) => col.primaryKey())
       .addColumn('seq', 'integer', (col) => col.notNull())
+      .execute()
+
+    // Insert initial cursor values:
+    // id=1 is for firehose, id=2 is for jetstream
+    await db
+      .insertInto('cursor' as never)
+      .values([
+        { id: 1, seq: 0 },
+        { id: 2, seq: 0 },
+      ])
       .execute()
   },
   async down(db: Kysely<unknown>) {

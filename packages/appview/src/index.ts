@@ -14,7 +14,7 @@ import { AppContext } from '#/context'
 import { createDb, migrateToLatest } from '#/db'
 import * as error from '#/error'
 import { createBidirectionalResolver, createIdResolver } from '#/id-resolver'
-import { createIngester } from '#/ingester'
+import { createFirehoseIngester, createJetstreamIngester } from '#/ingestors'
 import { createServer } from '#/lexicons'
 import { env } from '#/lib/env'
 
@@ -36,7 +36,8 @@ export class Server {
     // Create the atproto utilities
     const oauthClient = await createClient(db)
     const baseIdResolver = createIdResolver()
-    const ingester = await createIngester(db, baseIdResolver)
+    const ingester = await createJetstreamIngester(db)
+    // Alternative: const ingester = await createFirehoseIngester(db, baseIdResolver)
     const resolver = createBidirectionalResolver(baseIdResolver)
     const ctx = {
       db,
@@ -103,7 +104,7 @@ export class Server {
         })
       }
     } else {
-      server.xrpc.router.set('trust proxy', true)
+      app.set('trust proxy', true)
     }
 
     // Use the port from env (should be 3001 for the API server)

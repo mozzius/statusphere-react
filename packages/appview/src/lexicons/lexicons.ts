@@ -79,9 +79,6 @@ export const schemaDict = {
             type: 'object',
             required: ['statuses'],
             properties: {
-              cursor: {
-                type: 'string',
-              },
               statuses: {
                 type: 'array',
                 items: {

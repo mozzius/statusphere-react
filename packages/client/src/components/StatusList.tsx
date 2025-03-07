@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import api from '#/services/api'
+import { STATUS_OPTIONS } from './StatusForm'
 
 const StatusList = () => {
   // Use React Query to fetch and cache statuses
@@ -23,11 +24,19 @@ const StatusList = () => {
 
   // Destructure data
   const statuses = data?.statuses || []
+  
+  // Get a random emoji from the STATUS_OPTIONS array
+  const randomEmoji = STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)]
 
   if (isPending && !data) {
     return (
-      <div className="py-4 text-center text-gray-500 dark:text-gray-400">
-        Loading statuses...
+      <div className="py-8 text-center">
+        <div className="text-5xl mb-2 animate-pulse inline-block">
+          {randomEmoji}
+        </div>
+        <div className="text-gray-500 dark:text-gray-400">
+          Loading statuses...
+        </div>
       </div>
     )
   }

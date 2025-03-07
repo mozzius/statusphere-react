@@ -5,7 +5,10 @@ import pino from 'pino'
 
 import type { Database } from '#/db'
 
-export async function createIngester(db: Database, idResolver: IdResolver) {
+export async function createFirehoseIngester(
+  db: Database,
+  idResolver: IdResolver,
+) {
   const logger = pino({ name: 'firehose ingestion' })
 
   const cursor = await db

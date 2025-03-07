@@ -1,22 +1,19 @@
 import Header from '#/components/Header'
-import StatusForm from '#/components/StatusForm'
+import StatusForm, { STATUS_OPTIONS } from '#/components/StatusForm'
 import StatusList from '#/components/StatusList'
 import { useAuth } from '#/hooks/useAuth'
 
 const HomePage = () => {
   const { user, loading, error } = useAuth()
 
+  // Get a random emoji from the STATUS_OPTIONS array
+  const randomEmoji =
+    STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)]
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-16">
-        <div className="text-center p-6">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
-            Loading Statusphere...
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Setting up your experience
-          </p>
-        </div>
+      <div className="flex justify-center items-center h-[80vh]">
+        <div className="text-9xl animate-pulse">{randomEmoji}</div>
       </div>
     )
   }

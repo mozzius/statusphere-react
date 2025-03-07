@@ -5,7 +5,7 @@ import { XyzStatusphereDefs } from '@statusphere/lexicon'
 import useAuth from '#/hooks/useAuth'
 import api from '#/services/api'
 
-const STATUS_OPTIONS = [
+export const STATUS_OPTIONS = [
   '👍',
   '👎',
   '💙',
