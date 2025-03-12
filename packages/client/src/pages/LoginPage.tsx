@@ -63,7 +63,7 @@ const LoginPage = () => {
               htmlFor="handle"
               className="block mb-2 text-gray-700 dark:text-gray-300"
             >
-              Enter your Bluesky handle:
+              Enter your Bluesky handle or ATProto PDS:
             </label>
             <input
               id="handle"

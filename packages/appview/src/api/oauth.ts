@@ -51,7 +51,10 @@ export const createRouter = (ctx: AppContext) => {
   router.post('/oauth/initiate', async (req, res) => {
     // Validate
     const handle = req.body?.handle
-    if (typeof handle !== 'string' || !isValidHandle(handle)) {
+    if (
+      typeof handle !== 'string' ||
+      !(isValidHandle(handle) || isValidUrl(handle))
+    ) {
       res.status(400).json({ error: 'Invalid handle' })
       return
     }
@@ -80,4 +83,18 @@ export const createRouter = (ctx: AppContext) => {
   })
 
   return router
+}
+
+function isValidUrl(url: string): boolean {
+  try {
+    const urlp = new URL(url)
+    // http or https, no query params or path
+    return (
+      (urlp.protocol === 'http:' || urlp.protocol === 'https:') &&
+      !urlp.search &&
+      !urlp.pathname
+    )
+  } catch (error) {
+    return false
+  }
 }
