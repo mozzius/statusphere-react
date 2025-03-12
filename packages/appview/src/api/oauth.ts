@@ -88,12 +88,8 @@ export const createRouter = (ctx: AppContext) => {
 function isValidUrl(url: string): boolean {
   try {
     const urlp = new URL(url)
-    // http or https, no query params or path
-    return (
-      (urlp.protocol === 'http:' || urlp.protocol === 'https:') &&
-      !urlp.search &&
-      !urlp.pathname
-    )
+    // http or https
+    return urlp.protocol === 'http:' || urlp.protocol === 'https:'
   } catch (error) {
     return false
   }

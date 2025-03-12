@@ -49,7 +49,7 @@ const LoginPage = () => {
       <Header />
 
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm max-w-md mx-auto w-full">
-        <h2 className="text-xl font-semibold mb-4">Login with your handle</h2>
+        <h2 className="text-xl font-semibold mb-4">Login with ATProto</h2>
 
         {error && (
           <div className="text-red-500 mb-4 p-2 bg-red-50 dark:bg-red-950 dark:bg-opacity-30 rounded-md">
@@ -63,7 +63,7 @@ const LoginPage = () => {
               htmlFor="handle"
               className="block mb-2 text-gray-700 dark:text-gray-300"
             >
-              Enter your Bluesky handle or ATProto PDS:
+              Enter your Bluesky handle:
             </label>
             <input
               id="handle"
@@ -74,6 +74,10 @@ const LoginPage = () => {
               disabled={pending}
               className="w-full p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500 transition-colors"
             />
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
+              You can also enter an AT Protocol PDS URL, i.e.{' '}
+              <span className="whitespace-nowrap">https://bsky.social</span>
+            </p>
           </div>
 
           <button
