@@ -1,9 +1,13 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { useAuth } from '#/hooks/useAuth'
 
 const Header = () => {
+  const navigate = useNavigate()
   const { user, logout } = useAuth()
+  const [searchQuery, setSearchQuery] = useState('')
 
   const handleLogout = async () => {
     try {
@@ -11,6 +15,15 @@ const Header = () => {
     } catch (error) {
       console.error('Logout failed:', error)
     }
+  }
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!searchQuery.trim()) return
+    // Force refetch by removing the data from cache but def defeats the purpose of tanstack
+    // queryClient.removeQueries({
+    //   queryKey: ['searchStatus', searchQuery.trim()],
+    // })
+    navigate(`/search?handle=${encodeURIComponent(searchQuery.trim())}`)
   }
 
   return (
@@ -24,6 +37,27 @@ const Header = () => {
             Statusphere
           </Link>
         </h1>
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="flex-1 w-64 mx-4">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by ATProto Handle..."
+              className="w-full px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2
+              focus:ring-blue-500 dark:focus:ring-blue-400"
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2
+                                   px-2 py-0.5 bg-blue-500 text-white rounded-md
+                                   hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+            >
+              Search
+            </button>
+          </div>
+        </form>
         <nav>
           {user ? (
             <div className="flex gap-4 items-center">

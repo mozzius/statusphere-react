@@ -7,7 +7,14 @@ import App from '#/App'
 
 import '#/index.css'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true, // refetch on window focus
+      retry: false, // Don't retry failed queries
+    },
+  },
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

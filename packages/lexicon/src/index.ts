@@ -22,6 +22,7 @@ import * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef.js'
 import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob.js'
 import * as XyzStatusphereDefs from './types/xyz/statusphere/defs.js'
 import * as XyzStatusphereGetStatuses from './types/xyz/statusphere/getStatuses.js'
+import * as XyzStatusphereGetStatusesByUser from './types/xyz/statusphere/getStatusesByUser.js'
 import * as XyzStatusphereGetUser from './types/xyz/statusphere/getUser.js'
 import * as XyzStatusphereSendStatus from './types/xyz/statusphere/sendStatus.js'
 import * as XyzStatusphereStatus from './types/xyz/statusphere/status.js'
@@ -29,6 +30,7 @@ import { OmitKey, Un$Typed } from './util.js'
 
 export * as XyzStatusphereDefs from './types/xyz/statusphere/defs.js'
 export * as XyzStatusphereGetStatuses from './types/xyz/statusphere/getStatuses.js'
+export * as XyzStatusphereGetStatusesByUser from './types/xyz/statusphere/getStatusesByUser.js'
 export * as XyzStatusphereGetUser from './types/xyz/statusphere/getUser.js'
 export * as XyzStatusphereSendStatus from './types/xyz/statusphere/sendStatus.js'
 export * as XyzStatusphereStatus from './types/xyz/statusphere/status.js'
@@ -91,6 +93,18 @@ export class XyzStatusphereNS {
   ): Promise<XyzStatusphereGetStatuses.Response> {
     return this._client.call(
       'xyz.statusphere.getStatuses',
+      params,
+      undefined,
+      opts,
+    )
+  }
+
+  getStatusesByUser(
+    params?: XyzStatusphereGetStatusesByUser.QueryParams,
+    opts?: XyzStatusphereGetStatusesByUser.CallOptions,
+  ): Promise<XyzStatusphereGetStatusesByUser.Response> {
+    return this._client.call(
+      'xyz.statusphere.getStatusesByUser',
       params,
       undefined,
       opts,

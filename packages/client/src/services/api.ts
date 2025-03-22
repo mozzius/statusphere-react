@@ -1,6 +1,7 @@
 import * as Lexicon from '@statusphere/lexicon'
 import type {
   XyzStatusphereGetStatuses,
+  XyzStatusphereGetStatusesByUser,
   XyzStatusphereGetUser,
   XyzStatusphereSendStatus,
 } from '@statusphere/lexicon'
@@ -69,6 +70,11 @@ export const api = {
   // Get statuses
   getStatuses(params: XyzStatusphereGetStatuses.QueryParams) {
     return agent.xyz.statusphere.getStatuses(params)
+  },
+
+  // Get status by AT handle
+  getStatusesByUser(params: XyzStatusphereGetStatusesByUser.QueryParams) {
+    return agent.xyz.statusphere.getStatusesByUser(params)
   },
 
   // Create status

@@ -4,6 +4,7 @@ import { AuthProvider } from '#/hooks/useAuth'
 import HomePage from '#/pages/HomePage'
 import LoginPage from '#/pages/LoginPage'
 import OAuthCallbackPage from '#/pages/OAuthCallbackPage'
+import SearchResults from './pages/SearchResultsPage'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/oauth-callback" element={<OAuthCallbackPage />} />
+            <Route path="/search" element={<SearchResults />} />
           </Routes>
         </AuthProvider>
       </div>

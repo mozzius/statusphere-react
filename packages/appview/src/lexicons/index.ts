@@ -21,6 +21,7 @@ import * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords
 import * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord.js'
 import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob.js'
 import * as XyzStatusphereGetStatuses from './types/xyz/statusphere/getStatuses.js'
+import * as XyzStatusphereGetStatusesByUser from './types/xyz/statusphere/getStatusesByUser.js'
 import * as XyzStatusphereGetUser from './types/xyz/statusphere/getUser.js'
 import * as XyzStatusphereSendStatus from './types/xyz/statusphere/sendStatus.js'
 
@@ -67,6 +68,17 @@ export class XyzStatusphereNS {
     >,
   ) {
     const nsid = 'xyz.statusphere.getStatuses' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getStatusesByUser<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      XyzStatusphereGetStatusesByUser.Handler<ExtractAuth<AV>>,
+      XyzStatusphereGetStatusesByUser.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'xyz.statusphere.getStatusesByUser' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 

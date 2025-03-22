@@ -9,7 +9,7 @@ export default function (server: Server, ctx: AppContext) {
       const statuses = await ctx.db
         .selectFrom('status')
         .selectAll()
-        .orderBy('indexedAt', 'desc')
+        .orderBy('createdAt', 'desc')
         .limit(params.limit)
         .execute()
 

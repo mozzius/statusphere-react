@@ -95,6 +95,51 @@ export const schemaDict = {
       },
     },
   },
+  XyzStatusphereGetStatusesByUser: {
+    lexicon: 1,
+    id: 'xyz.statusphere.getStatusesByUser',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Get most recent statuses of a user',
+        parameters: {
+          type: 'params',
+          required: ['handle'],
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            handle: {
+              type: 'string',
+              description: 'The handle of the user to get statuses for',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['statuses'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              statuses: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:xyz.statusphere.defs#statusView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   XyzStatusphereGetUser: {
     lexicon: 1,
     id: 'xyz.statusphere.getUser',
@@ -1279,6 +1324,7 @@ export function validate(
 export const ids = {
   XyzStatusphereDefs: 'xyz.statusphere.defs',
   XyzStatusphereGetStatuses: 'xyz.statusphere.getStatuses',
+  XyzStatusphereGetStatusesByUser: 'xyz.statusphere.getStatusesByUser',
   XyzStatusphereGetUser: 'xyz.statusphere.getUser',
   XyzStatusphereSendStatus: 'xyz.statusphere.sendStatus',
   XyzStatusphereStatus: 'xyz.statusphere.status',
