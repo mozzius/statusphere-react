@@ -55,7 +55,7 @@ Due to OAuth requirements, we need to use HTTPS for development. The easiest way
 
 ## API Endpoints
 
-- `GET /client-metadata.json` - OAuth client metadata
+- `GET /oauth-client-metadata.json` - OAuth client metadata
 - `GET /oauth/callback` - OAuth callback endpoint
 - `POST /login` - Login with handle
 - `POST /logout` - Logout current user

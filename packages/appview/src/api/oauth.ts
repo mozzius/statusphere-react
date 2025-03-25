@@ -9,7 +9,7 @@ export const createRouter = (ctx: AppContext) => {
   const router = express.Router()
 
   // OAuth metadata
-  router.get('/client-metadata.json', (_req, res) => {
+  router.get('/oauth-client-metadata.json', (_req, res) => {
     res.json(ctx.oauthClient.clientMetadata)
   })
 
