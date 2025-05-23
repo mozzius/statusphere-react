@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import {
   AppBskyActorDefs,
   AppBskyActorProfile,
@@ -19,6 +20,9 @@ export async function statusToStatusView(
       did: status.authorDid,
       handle: await ctx.resolver
         .resolveDidToHandle(status.authorDid)
+        .then((handle) =>
+          handle.startsWith('did:') ? 'invalid.handle' : handle,
+        )
         .catch(() => 'invalid.handle'),
     },
   }
