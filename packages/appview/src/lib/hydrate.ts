@@ -7,6 +7,8 @@ import {
 import { AppContext } from '#/context'
 import { Status } from '#/db'
 
+const INVALID_HANDLE = 'handle.invalid'
+
 export async function statusToStatusView(
   status: Status,
   ctx: AppContext,
@@ -19,10 +21,8 @@ export async function statusToStatusView(
       did: status.authorDid,
       handle: await ctx.resolver
         .resolveDidToHandle(status.authorDid)
-        .then((handle) =>
-          handle.startsWith('did:') ? 'invalid.handle' : handle,
-        )
-        .catch(() => 'invalid.handle'),
+        .then((handle) => (handle.startsWith('did:') ? INVALID_HANDLE : handle))
+        .catch(() => INVALID_HANDLE),
     },
   }
 }
