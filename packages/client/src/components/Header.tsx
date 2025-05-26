@@ -31,7 +31,7 @@ const Header = () => {
                 <img
                   src={user.profile.avatar}
                   alt={user.profile.displayName || user.profile.handle}
-                  className="w-8 h-8 rounded-full"
+                  className="w-8 h-8 rounded-full text-transparent"
                 />
               ) : (
                 <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
