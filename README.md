@@ -1,5 +1,7 @@
 # Statusphere React
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/P-FGPW?referralCode=e99Eop&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 A status sharing application built with React and the AT Protocol.
 
 This is a React implementation of the [example application](https://atproto.com/guides/applications) covering:
